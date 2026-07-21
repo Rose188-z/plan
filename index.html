@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<title>日计划</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--g:#4CAF50;--gl:#E8F5E9;--gr:#9E9E9E;--grl:#F5F5F5;--t:#212121;--ts:#757575;--bd:#E0E0E0;--bg:#FAFAFA;--w:#FFF;--r:#EF5350;--bl:#E3F2FD;--b:#1976D2}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden}
+.page{display:none;min-height:100vh;padding-bottom:80px}
+.page.active{display:block}
+.header{position:sticky;top:0;z-index:100;background:var(--w);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:20px;font-weight:700}
+.header-btn{background:none;border:none;font-size:22px;color:var(--t);cursor:pointer;padding:6px 10px;border-radius:8px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid var(--bd);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 8px;background:none;border:none;color:var(--gr);cursor:pointer;gap:3px}
+.nav-item.active{color:var(--g)}
+.nav-icon{font-size:22px}
+.nav-label{font-size:11px}
+.cal-nav{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 20px 8px}
+.cal-nav button{background:none;border:none;font-size:20px;cursor:pointer;padding:8px;border-radius:50%;color:var(--ts)}
+.cal-nav .ml{font-size:18px;font-weight:700;min-width:140px;text-align:center}
+.wr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:8px 12px 4px}
+.wr span{font-size:12px;color:var(--ts);padding:8px 0}
+.dg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 12px 16px}
+.dc{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:14px;cursor:pointer;border:none;background:none;color:var(--t);transition:all .2s}
+.dc.empty{cursor:default}
+.dc.today{font-weight:700;box-shadow:inset 0 0 0 2px var(--g)}
+.dc.completed{background:var(--g);color:#fff;font-weight:700}
+.dc.has-tasks{background:var(--gl)}
+.dc.future{color:#BDBDBD}
+.mstats{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;display:flex;justify-content:space-around;text-align:center;border:1px solid var(--bd)}
+.sn{font-size:24px;font-weight:700;color:var(--g)}
+.sl{font-size:12px;color:var(--ts);margin-top:4px}
+.di{padding:16px 20px 8px}
+.di .dt{font-size:14px;color:var(--ts)}
+.di .dd{font-size:22px;font-weight:700;margin-top:4px}
+.pw{padding:0 20px 6px}
+.pbg{background:var(--grl);border-radius:100px;height:8px;overflow:hidden}
+.pf{height:100%;background:var(--g);border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0}
+.pt{text-align:right;padding:4px 20px 12px;font-size:13px;color:var(--ts)}
+.sl2{padding:8px 20px;font-size:12px;font-weight:700;color:var(--ts);letter-spacing:1px}
+.tl{padding:0 20px}
+.ti{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--w);border-radius:14px;margin-bottom:8px;border:1px solid var(--bd);animation:si .3s ease}
+@keyframes si{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ti.done{opacity:.5}
+.ti.done .tt{text-decoration:line-through;color:var(--ts)}
+.cb{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:none;transition:all .3s}
+.cb.checked{border-color:var(--g);background:var(--g);animation:pp .4s cubic-bezier(.4,0,.2,1)}
+@keyframes pp{0%{transform:scale(1)}30%{transform:scale(1.3)}100%{transform:scale(1)}}
+.cb.checked::after{content:'✓';color:#fff;font-size:14px;font-weight:700}
+.tt{flex:1;font-size:16px;line-height:1.4}
+.tg{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600;flex-shrink:0}
+.tg.fixed{background:var(--gl);color:var(--g)}
+.tg.flex{background:var(--bl);color:var(--b)}
+.td{background:none;border:none;color:var(--gr);font-size:18px;cursor:pointer;padding:4px;opacity:.4}
+.aa{padding:12px 20px 30px}
+.ar{display:flex;gap:10px}
+.ai{flex:1;padding:14px 18px;border:1px solid var(--bd);border-radius:14px;font-size:15px;background:var(--w);outline:none}
+.ai:focus{border-color:var(--g)}
+.ab{padding:14px 20px;background:var(--g);color:#fff;border:none;border-radius:14px;font-size:22px;cursor:pointer}
+.rd{padding:8px 20px 16px;font-size:14px;color:var(--ts);line-height:1.6}
+.ri{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--w);border-radius:14px;margin:0 20px 8px;border:1px solid var(--bd);animation:si .3s ease}
+.ric{width:36px;height:36px;background:var(--gl);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.rit{flex:1;font-size:16px}
+.rid{background:none;border:none;color:var(--gr);font-size:18px;cursor:pointer;padding:4px;opacity:.4}
+.es{text-align:center;padding:60px 20px;color:var(--ts)}
+.es .ei{font-size:48px;margin-bottom:12px}
+.es p{font-size:15px;line-height:1.6}
+.conf{position:fixed;width:10px;height:10px;z-index:10000;border-radius:2px;pointer-events:none}
+.co{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .3s}
+.co.show{opacity:1}
+.ct{font-size:28px;font-weight:700;color:var(--g);text-align:center;line-height:1.6;animation:cp .6s ease}
+@keyframes cp{0%{transform:scale(0);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<!-- 日历页 -->
+<div class="page" id="page-cal">
+<div class="header">
+<h1>📅 日历</h1>
+</div>
+<div class="cal-nav">
+<button onclick="changeMonth(-1)">◀</button>
+<span class="ml" id="monthLabel"></span>
+<button onclick="changeMonth(1)">▶</button>
+</div>
+<div class="wr">
+<span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+</div>
+<div class="dg" id="daysGrid"></div>
+<div class="mstats">
+<div><div class="sn" id="statDone">0</div><div class="sl">完成天数</div></div>
+<div><div class="sn" id="statTotal">0</div><div class="sl">有计划天数</div></div>
+<div><div class="sn" id="statRate">0%</div><div class="sl">完成率</div></div>
+</div>
+</div>
+
+<!-- 今日页 -->
+<div class="page active" id="page-today">
+<div class="header">
+<h1>📋 今日计划</h1>
+<button class="header-btn" onclick="goToDate(todayStr())">今</button>
+</div>
+<div class="di">
+<div class="dt" id="todayDate"></div>
+<div class="dd" id="todayTitle"></div>
+</div>
+<div class="pw"><div class="pbg"><div class="pf" id="progressBar"></div></div></div>
+<div class="pt" id="progressText">0 / 0 已完成</div>
+<div id="fixedSection">
+<div class="sl2">📌 每日固定</div>
+<div class="tl" id="fixedList"></div>
+</div>
+<div id="flexSection">
+<div class="sl2">✏️ 今日新增</div>
+<div class="tl" id="flexList"></div>
+</div>
+<div class="aa">
+<div class="ar">
+<input class="ai" id="newTask" type="text" placeholder="添加今日计划..." 
+  onkeydown="if(event.key==='Enter')addFlexTask()">
+<button class="ab" onclick="addFlexTask()">+</button>
+</div>
+</div>
+</div>
+
+<!-- 固定项目页 -->
+<div class="page" id="page-routine">
+<div class="header">
+<h1>🔁 固定项目</h1>
+</div>
+<div class="rd">这里管理你每天固定要做的事，添加后会自动出现在每日计划中。</div>
+<div id="routineList"></div>
+<div id="routineEmpty" class="es" style="display:none">
+<div class="ei">📝</div>
+<p>还没有固定项目<br>添加后每天自动出现在今日计划里</p>
+</div>
+<div class="aa">
+<div class="ar">
+<input class="ai" id="newRoutine" type="text" placeholder="添加固定项目..." 
+  onkeydown="if(event.key==='Enter')addRoutine()">
+<button class="ab" onclick="addRoutine()">+</button>
+</div>
+</div>
+</div>
+
+<!-- 庆祝弹层 -->
+<div class="co" id="celebOverlay">
+<div class="ct" id="celebText"></div>
+</div>
+
+<!-- 底部导航 -->
+<div class="bottom-nav">
+<button class="nav-item" onclick="switchPage('cal')">
+<span class="nav-icon">📅</span>
+<span class="nav-label">日历</span>
+</button>
+<button class="nav-item active" onclick="switchPage('today')">
+<span class="nav-icon">📋</span>
+<span class="nav-label">今日</span>
+</button>
+<button class="nav-item" onclick="switchPage('routine')">
+<span class="nav-icon">🔁</span>
+<span class="nav-label">项目</span>
+</button>
+</div>
+<script>
+// ===== 数据管理 =====
+function load(key, def) {
+  try { var d = localStorage.getItem(key); return d ? JSON.parse(d) : def; }
+  catch(e) { return def; }
+}
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+// 固定项目列表: [{id, text, createdDate}]
+function getRoutines() { return load('routines', []); }
+function saveRoutines(r) { save('routines', r); }
+
+// 某天的数据: {fixed:{id:bool}, flex:[{id,text,done}], removedFixed:[id]}
+function getDayData(dateStr) { return load('day_' + dateStr, null); }
+function saveDayData(dateStr, data) { save('day_' + dateStr, data); }
+
+// ===== 日期工具 =====
+function todayStr() {
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function dateToStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function formatDateCN(str) {
+  var p = str.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  var weeks = ['日','一','二','三','四','五','六'];
+  return +p[0] + '年' + +p[1] + '月' + +p[2] + '日 星期' + weeks[d.getDay()];
+}
+function getWeekdayName(str) {
+  var p = str.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  var weeks = ['周日','周一','周二','周三','周四','周五','周六'];
+  return weeks[d.getDay()];
+}
+
+// ===== 当前查看的日期 =====
+var currentDate = todayStr();
+var calYear, calMonth;
+
+// ===== 初始化当天数据 =====
+function ensureDayData(dateStr) {
+  var data = getDayData(dateStr);
+  if (!data) {
+    data = { fixed: {}, flex: [], removedFixed: [] };
+  }
+  if (!data.removedFixed) data.removedFixed = [];
+  // 同步固定项目
+  var routines = getRoutines();
+  routines.forEach(function(r) {
+    // 只添加创建日期 <= 当前日期 的固定项目
+    if (r.createdDate <= dateStr) {
+      if (!(r.id in data.fixed) && data.removedFixed.indexOf(r.id) === -1) {
+        data.fixed[r.id] = false;
+      }
+    }
+  });
+  saveDayData(dateStr, data);
+  return data;
+}
+
+// ===== 获取某天所有任务用于判断完成情况 =====
+function getDayStatus(dateStr) {
+  var data = getDayData(dateStr);
+  if (!data) {
+    // 检查是否有固定项目适用于这天
+    var routines = getRoutines();
+    var hasRoutine = false;
+    routines.forEach(function(r) {
+      if (r.createdDate <= dateStr) hasRoutine = true;
+    });
+    if (!hasRoutine) return { total: 0, done: 0 };
+    data = ensureDayData(dateStr);
+  }
+  var total = 0, done = 0;
+  // 固定项目
+  var fixedKeys = Object.keys(data.fixed);
+  total += fixedKeys.length;
+  fixedKeys.forEach(function(k) { if (data.fixed[k]) done++; });
+  // 灵活任务
+  if (data.flex) {
+    total += data.flex.length;
+    data.flex.forEach(function(f) { if (f.done) done++; });
+  }
+  return { total: total, done: done };
+}
+
+// ===== 页面切换 =====
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n, i) {
+    n.classList.remove('active');
+    if ((name==='cal'&&i===0)||(name==='today'&&i===1)||(name==='routine'&&i===2))
+      n.classList.add('active');
+  });
+  if (name === 'cal') renderCalendar();
+  if (name === 'today') renderToday();
+  if (name === 'routine') renderRoutines();
+}
+
+// ===== 日历页 =====
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1) { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('monthLabel').textContent = calYear + '年' + calMonth + '月';
+  var grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+  var firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  var daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  var today = todayStr();
+  var doneDays = 0, taskDays = 0;
+
+  // 空白填充
+  for (var i = 0; i < firstDay; i++) {
+    var empty = document.createElement('div');
+    empty.className = 'dc empty';
+    grid.appendChild(empty);
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var ds = calYear + '-' + String(calMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    var cell = document.createElement('button');
+    cell.className = 'dc';
+    cell.textContent = d;
+    cell.setAttribute('data-date', ds);
+
+    if (ds === today) cell.classList.add('today');
+    if (ds > today) {
+      cell.classList.add('future');
+    } else {
+      var st = getDayStatus(ds);
+      if (st.total > 0) {
+        taskDays++;
+        if (st.done === st.total) {
+          cell.classList.add('completed');
+          doneDays++;
+        } else {
+          cell.classList.add('has-tasks');
+        }
+      }
+    }
+
+    cell.onclick = (function(date) {
+      return function() { goToDate(date); };
+    })(ds);
+    grid.appendChild(cell);
+  }
+
+  document.getElementById('statDone').textContent = doneDays;
+  document.getElementById('statTotal').textContent = taskDays;
+  document.getElementById('statRate').textContent = taskDays > 0 ? Math.round(doneDays/taskDays*100) + '%' : '0%';
+}
+
+function goToDate(dateStr) {
+  currentDate = dateStr;
+  switchPage('today');
+}
+// ===== 今日页渲染 =====
+function renderToday() {
+  var data = ensureDayData(currentDate);
+  var today = todayStr();
+
+  // 头部信息
+  document.getElementById('todayDate').textContent = formatDateCN(currentDate);
+  if (currentDate === today) {
+    document.getElementById('todayTitle').textContent = '今天的计划';
+  } else if (currentDate < today) {
+    document.getElementById('todayTitle').textContent = '历史记录';
+  } else {
+    document.getElementById('todayTitle').textContent = '未来计划';
+  }
+
+  var routines = getRoutines();
+  var routineMap = {};
+  routines.forEach(function(r) { routineMap[r.id] = r; });
+
+  // 渲染固定任务
+  var fixedList = document.getElementById('fixedList');
+  fixedList.innerHTML = '';
+  var fixedKeys = Object.keys(data.fixed);
+  var fixedSection = document.getElementById('fixedSection');
+
+  if (fixedKeys.length === 0) {
+    fixedSection.style.display = 'none';
+  } else {
+    fixedSection.style.display = 'block';
+    fixedKeys.forEach(function(id) {
+      var isDone = data.fixed[id];
+      var name = routineMap[id] ? routineMap[id].text : '已删除的项目';
+      var div = document.createElement('div');
+      div.className = 'ti' + (isDone ? ' done' : '');
+      div.innerHTML =
+        '<div class="cb' + (isDone ? ' checked' : '') + '" onclick="toggleFixed(\'' + id + '\')"></div>' +
+        '<span class="tt">' + escHtml(name) + '</span>' +
+        '<span class="tg fixed">固定</span>' +
+        '<button class="td" onclick="removeFixedFromDay(\'' + id + '\')">✕</button>';
+      fixedList.appendChild(div);
+    });
+  }
+
+  // 渲染灵活任务
+  var flexList = document.getElementById('flexList');
+  flexList.innerHTML = '';
+  var flexSection = document.getElementById('flexSection');
+
+  if (data.flex.length === 0 && fixedKeys.length > 0) {
+    flexSection.style.display = 'block';
+    flexList.innerHTML = '<div class="es" style="padding:20px"><p style="font-size:14px;color:var(--ts)">暂无新增任务</p></div>';
+  } else if (data.flex.length === 0 && fixedKeys.length === 0) {
+    flexSection.style.display = 'block';
+    flexList.innerHTML = '<div class="es" style="padding:30px"><div class="ei">📝</div><p>还没有计划<br>添加固定项目或新增今日任务吧</p></div>';
+  } else {
+    flexSection.style.display = 'block';
+    data.flex.forEach(function(task, idx) {
+      var div = document.createElement('div');
+      div.className = 'ti' + (task.done ? ' done' : '');
+      div.innerHTML =
+        '<div class="cb' + (task.done ? ' checked' : '') + '" onclick="toggleFlex(' + idx + ')"></div>' +
+        '<span class="tt">' + escHtml(task.text) + '</span>' +
+        '<span class="tg flex">新增</span>' +
+        '<button class="td" onclick="removeFlex(' + idx + ')">✕</button>';
+      flexList.appendChild(div);
+    });
+  }
+
+  // 更新进度
+  updateProgress(data);
+}
+
+function escHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ===== 进度条 =====
+function updateProgress(data) {
+  var total = 0, done = 0;
+  var fixedKeys = Object.keys(data.fixed);
+  total += fixedKeys.length;
+  fixedKeys.forEach(function(k) { if (data.fixed[k]) done++; });
+  total += data.flex.length;
+  data.flex.forEach(function(f) { if (f.done) done++; });
+
+  var pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' / ' + total + ' 已完成';
+
+  // 全部完成庆祝
+  if (total > 0 && done === total) {
+    setTimeout(function() { celebrate(); }, 300);
+  }
+}
+
+// ===== 任务操作 =====
+function toggleFixed(id) {
+  var data = getDayData(currentDate);
+  data.fixed[id] = !data.fixed[id];
+  saveDayData(currentDate, data);
+  renderToday();
+}
+
+function toggleFlex(idx) {
+  var data = getDayData(currentDate);
+  data.flex[idx].done = !data.flex[idx].done;
+  saveDayData(currentDate, data);
+  renderToday();
+}
+
+function removeFixedFromDay(id) {
+  var data = getDayData(currentDate);
+  delete data.fixed[id];
+  if (data.removedFixed.indexOf(id) === -1) {
+    data.removedFixed.push(id);
+  }
+  saveDayData(currentDate, data);
+  renderToday();
+}
+
+function removeFlex(idx) {
+  var data = getDayData(currentDate);
+  data.flex.splice(idx, 1);
+  saveDayData(currentDate, data);
+  renderToday();
+}
+
+function addFlexTask() {
+  var input = document.getElementById('newTask');
+  var text = input.value.trim();
+  if (!text) return;
+  var data = ensureDayData(currentDate);
+  data.flex.push({ id: 'f_' + Date.now(), text: text, done: false });
+  saveDayData(currentDate, data);
+  input.value = '';
+  renderToday();
+}
+
+// ===== 固定项目管理 =====
+function renderRoutines() {
+  var routines = getRoutines();
+  var list = document.getElementById('routineList');
+  var empty = document.getElementById('routineEmpty');
+  list.innerHTML = '';
+
+  if (routines.length === 0) {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    routines.forEach(function(r, idx) {
+      var div = document.createElement('div');
+      div.className = 'ri';
+      div.innerHTML =
+        '<div class="ric">📌</div>' +
+        '<span class="rit">' + escHtml(r.text) + '</span>' +
+        '<button class="rid" onclick="removeRoutine(' + idx + ')">✕</button>';
+      list.appendChild(div);
+    });
+  }
+}
+
+function addRoutine() {
+  var input = document.getElementById('newRoutine');
+  var text = input.value.trim();
+  if (!text) return;
+  var routines = getRoutines();
+  var newItem = { id: 'r_' + Date.now(), text: text, createdDate: todayStr() };
+  routines.push(newItem);
+  saveRoutines(routines);
+  input.value = '';
+
+  // 立刻同步到今天
+  var data = getDayData(todayStr());
+  if (data) {
+    data.fixed[newItem.id] = false;
+    // 如果之前被移除过，取消移除
+    var rmIdx = data.removedFixed.indexOf(newItem.id);
+    if (rmIdx !== -1) data.removedFixed.splice(rmIdx, 1);
+    saveDayData(todayStr(), data);
+  }
+
+  renderRoutines();
+}
+
+function removeRoutine(idx) {
+  var routines = getRoutines();
+  routines.splice(idx, 1);
+  saveRoutines(routines);
+  renderRoutines();
+}
+// ===== 庆祝效果 =====
+var celebShown = {};
+
+function celebrate() {
+  var key = currentDate;
+  if (celebShown[key]) return;
+  celebShown[key] = true;
+
+  // 撒花
+  launchConfetti();
+
+  // 文字
+  var overlay = document.getElementById('celebOverlay');
+  var text = document.getElementById('celebText');
+  text.textContent = '🎉 全部完成！';
+  overlay.classList.add('show');
+
+  setTimeout(function() {
+    overlay.classList.remove('show');
+  }, 2000);
+}
+
+function launchConfetti() {
+  var colors = ['#4CAF50','#FF9800','#2196F3','#E91E63','#FFEB3B','#9C27B0','#00BCD4'];
+  var count = 60;
+
+  for (var i = 0; i < count; i++) {
+    (function(delay) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'conf';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = '-10px';
+        el.style.width = (Math.random() * 8 + 6) + 'px';
+        el.style.height = (Math.random() * 8 + 6) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.opacity = '1';
+        document.body.appendChild(el);
+
+        var x = (Math.random() - 0.5) * 200;
+        var duration = Math.random() * 1500 + 1500;
+        var startTime = Date.now();
+
+        function fall() {
+          var elapsed = Date.now() - startTime;
+          var progress = elapsed / duration;
+          if (progress >= 1) {
+            el.remove();
+            return;
+          }
+          var y = progress * window.innerHeight * 1.1;
+          var wobble = Math.sin(progress * 10) * 20;
+          el.style.transform = 'translate(' + (x * progress + wobble) + 'px, ' + y + 'px) rotate(' + (progress * 720) + 'deg)';
+          el.style.opacity = progress > 0.7 ? String(1 - (progress - 0.7) / 0.3) : '1';
+          requestAnimationFrame(fall);
+        }
+        requestAnimationFrame(fall);
+      }, delay);
+    })(Math.random() * 500);
+  }
+}
+
+// ===== 初始化 =====
+function init() {
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth() + 1;
+  currentDate = todayStr();
+
+  // 默认显示今日页
+  switchPage('today');
+}
+
+init();
+</script>
+</body>
+</html>
