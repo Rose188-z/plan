@@ -43,7 +43,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .month-plan{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;border:1px solid var(--bd)}
 .month-plan-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--t)}
 .mp-item{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.mp-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0}
+.mp-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:none;transition:all .3s}
+.mp-check.checked{border-color:var(--g);background:var(--g)}
+.mp-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+.mp-item.done .mp-text{text-decoration:line-through;color:var(--ts);opacity:.6}
 .mp-text{flex:1;font-size:14px;padding:8px 0;border:none;border-bottom:1px solid var(--bd);background:none;outline:none;color:var(--t)}
 .mp-text:focus{border-bottom-color:var(--g)}
 .mp-text::placeholder{color:#BDBDBD}
@@ -603,13 +606,27 @@ function renderMonthPlan() {
   list.innerHTML = '';
 
   mp.forEach(function(item, idx) {
+    var isDone = item.done || false;
     var div = document.createElement('div');
-    div.className = 'mp-item';
-    div.innerHTML = '<div class="mp-dot"></div>' +
+    div.className = 'mp-item' + (isDone ? ' done' : '');
+    div.innerHTML = '<div class="mp-check' + (isDone ? ' checked' : '') + '" onclick="toggleMonthPlan(\'' + ym + '\',' + idx + ')"></div>' +
       '<input class="mp-text" type="text" placeholder="计划内容..." value="' + escHtml(item.text || '') + '" data-idx="' + idx + '" data-ym="' + ym + '">' +
       '<button class="mp-del" onclick="delMonthPlan(\'' + ym + '\',' + idx + ')">✕</button>';
     list.appendChild(div);
   });
+
+  list.querySelectorAll('.mp-text').forEach(function(input) {
+    input.addEventListener('blur', function() {
+      var ym2 = this.getAttribute('data-ym');
+      var idx = parseInt(this.getAttribute('data-idx'));
+      var mp2 = getMonthPlan(ym2);
+      if (mp2[idx]) {
+        mp2[idx].text = this.value.trim();
+        saveMonthPlan(ym2, mp2);
+      }
+    });
+  });
+}
 
   // 绑定blur保存
   list.querySelectorAll('.mp-text').forEach(function(input) {
@@ -645,6 +662,15 @@ function delMonthPlan(ym, idx) {
   renderMonthPlan();
 }
 
+function toggleMonthPlan(ym, idx) {
+  var mp = getMonthPlan(ym);
+  if (mp[idx]) {
+    mp[idx].done = !mp[idx].done;
+    saveMonthPlan(ym, mp);
+    renderMonthPlan();
+  }
+}
+  
 // ===== 今日页渲染 =====
 function renderToday() {
   var data = ensureDayData(currentDate);
