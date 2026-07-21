@@ -9,68 +9,138 @@
 <title>日计划</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--g:#4CAF50;--gl:#E8F5E9;--gr:#9E9E9E;--grl:#F5F5F5;--t:#212121;--ts:#757575;--bd:#E0E0E0;--bg:#FAFAFA;--w:#FFF;--r:#EF5350;--bl:#E3F2FD;--b:#1976D2}
+:root{--g:#4CAF50;--gl:#E8F5E9;--gr:#9E9E9E;--grl:#F5F5F5;--t:#212121;--ts:#757575;--bd:#E0E0E0;--bg:#FAFAFA;--w:#FFF;--r:#EF5350;--bl:#E3F2FD;--b:#1976D2;--o:#FF9800;--ol:#FFF3E0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden}
 .page{display:none;min-height:100vh;padding-bottom:80px}
 .page.active{display:block}
-.header{position:sticky;top:0;z-index:100;background:var(--w);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:20px;font-weight:700}
-.header-btn{background:none;border:none;font-size:22px;color:var(--t);cursor:pointer;padding:6px 10px;border-radius:8px}
+.sub-page{display:none;min-height:100vh;padding-bottom:80px}
+.sub-page.active{display:block}
+
+/* 底部导航 */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid var(--bd);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 8px;background:none;border:none;color:var(--gr);cursor:pointer;gap:3px}
 .nav-item.active{color:var(--g)}
 .nav-icon{font-size:22px}
 .nav-label{font-size:11px}
+
+/* 日历页 */
 .cal-nav{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 20px 8px}
 .cal-nav button{background:none;border:none;font-size:20px;cursor:pointer;padding:8px;border-radius:50%;color:var(--ts)}
 .cal-nav .ml{font-size:18px;font-weight:700;min-width:140px;text-align:center}
 .wr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:8px 12px 4px}
 .wr span{font-size:12px;color:var(--ts);padding:8px 0}
-.dg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 12px 16px}
+.dg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 12px 12px}
 .dc{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:14px;cursor:pointer;border:none;background:none;color:var(--t);transition:all .2s}
 .dc.empty{cursor:default}
 .dc.today{font-weight:700;box-shadow:inset 0 0 0 2px var(--g)}
 .dc.completed{background:var(--g);color:#fff;font-weight:700}
 .dc.has-tasks{background:var(--gl)}
 .dc.future{color:#BDBDBD}
-.mstats{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;display:flex;justify-content:space-around;text-align:center;border:1px solid var(--bd)}
-.sn{font-size:24px;font-weight:700;color:var(--g)}
-.sl{font-size:12px;color:var(--ts);margin-top:4px}
-.di{padding:16px 20px 8px}
-.di .dt{font-size:14px;color:var(--ts)}
-.di .dd{font-size:22px;font-weight:700;margin-top:4px}
-.pw{padding:0 20px 6px}
-.pbg{background:var(--grl);border-radius:100px;height:8px;overflow:hidden}
+.mstats{margin:0 20px 12px;padding:14px;background:var(--w);border-radius:16px;display:flex;justify-content:space-around;text-align:center;border:1px solid var(--bd)}
+.sn{font-size:22px;font-weight:700;color:var(--g)}
+.sl{font-size:11px;color:var(--ts);margin-top:2px}
+
+/* 月度计划 */
+.month-plan{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;border:1px solid var(--bd)}
+.month-plan-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--t)}
+.mp-item{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mp-item:last-child{margin-bottom:0}
+.mp-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0}
+.mp-text{flex:1;font-size:14px;padding:8px 0;border:none;border-bottom:1px solid var(--bd);background:none;outline:none;color:var(--t)}
+.mp-text:focus{border-bottom-color:var(--g)}
+.mp-text::placeholder{color:#BDBDBD}
+
+/* 今日页 */
+.di{padding:12px 20px 6px}
+.di .dt{font-size:13px;color:var(--ts)}
+.di .dd{font-size:20px;font-weight:700;margin-top:2px}
+.pw{padding:0 20px 4px}
+.pbg{background:var(--grl);border-radius:100px;height:6px;overflow:hidden}
 .pf{height:100%;background:var(--g);border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0}
-.pt{text-align:right;padding:4px 20px 12px;font-size:13px;color:var(--ts)}
-.sl2{padding:8px 20px;font-size:12px;font-weight:700;color:var(--ts);letter-spacing:1px}
-.tl{padding:0 20px}
-.ti{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--w);border-radius:14px;margin-bottom:8px;border:1px solid var(--bd);animation:si .3s ease}
+.pt{text-align:right;padding:2px 20px 8px;font-size:12px;color:var(--ts)}
+.sl2{padding:6px 20px;font-size:11px;font-weight:700;color:var(--ts);letter-spacing:1px}
+.tl{padding:0 16px}
+.ti{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--w);border-radius:12px;margin-bottom:6px;border:1px solid var(--bd);animation:si .3s ease}
 @keyframes si{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .ti.done{opacity:.5}
 .ti.done .tt{text-decoration:line-through;color:var(--ts)}
-.cb{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:none;transition:all .3s}
+.cb{width:24px;height:24px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:none;transition:all .3s}
 .cb.checked{border-color:var(--g);background:var(--g);animation:pp .4s cubic-bezier(.4,0,.2,1)}
 @keyframes pp{0%{transform:scale(1)}30%{transform:scale(1.3)}100%{transform:scale(1)}}
-.cb.checked::after{content:'✓';color:#fff;font-size:14px;font-weight:700}
-.tt{flex:1;font-size:16px;line-height:1.4}
-.tg{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600;flex-shrink:0}
+.cb.checked::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+.tt{flex:1;font-size:15px;line-height:1.3}
+.tg{font-size:9px;padding:2px 6px;border-radius:100px;font-weight:600;flex-shrink:0}
 .tg.fixed{background:var(--gl);color:var(--g)}
 .tg.flex{background:var(--bl);color:var(--b)}
-.td{background:none;border:none;color:var(--gr);font-size:18px;cursor:pointer;padding:4px;opacity:.4}
-.aa{padding:12px 20px 30px}
-.ar{display:flex;gap:10px}
-.ai{flex:1;padding:14px 18px;border:1px solid var(--bd);border-radius:14px;font-size:15px;background:var(--w);outline:none}
+.td{background:none;border:none;color:var(--gr);font-size:16px;cursor:pointer;padding:4px;opacity:.4}
+.aa{padding:10px 16px 30px}
+.ar{display:flex;gap:8px}
+.ai{flex:1;padding:12px 16px;border:1px solid var(--bd);border-radius:12px;font-size:14px;background:var(--w);outline:none}
 .ai:focus{border-color:var(--g)}
-.ab{padding:14px 20px;background:var(--g);color:#fff;border:none;border-radius:14px;font-size:22px;cursor:pointer}
-.rd{padding:8px 20px 16px;font-size:14px;color:var(--ts);line-height:1.6}
+.ab{padding:12px 18px;background:var(--g);color:#fff;border:none;border-radius:12px;font-size:20px;cursor:pointer}
+
+/* Other页 */
+.other-list{padding:16px 20px}
+.other-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--w);border-radius:16px;margin-bottom:10px;border:1px solid var(--bd);cursor:pointer;transition:all .2s}
+.other-card:active{transform:scale(0.98);background:var(--grl)}
+.oc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.oc-icon.green{background:var(--gl)}
+.oc-icon.blue{background:var(--bl)}
+.oc-icon.orange{background:var(--ol)}
+.oc-info{flex:1}
+.oc-title{font-size:16px;font-weight:600}
+.oc-desc{font-size:12px;color:var(--ts);margin-top:2px}
+.oc-arrow{color:var(--gr);font-size:18px}
+
+/* 子页面通用头部 */
+.sub-header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--bd);background:var(--w);position:sticky;top:0;z-index:100}
+.sub-back{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 8px;color:var(--t)}
+.sub-title{font-size:18px;font-weight:700}
+
+/* 固定事项子页面 */
 .ri{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--w);border-radius:14px;margin:0 20px 8px;border:1px solid var(--bd);animation:si .3s ease}
 .ric{width:36px;height:36px;background:var(--gl);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .rit{flex:1;font-size:16px}
 .rid{background:none;border:none;color:var(--gr);font-size:18px;cursor:pointer;padding:4px;opacity:.4}
-.es{text-align:center;padding:60px 20px;color:var(--ts)}
+
+/* 灵感列表 */
+.idea-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--w);border-radius:14px;margin:0 20px 8px;border:1px solid var(--bd);cursor:pointer;transition:all .2s}
+.idea-item:active{background:var(--grl)}
+.idea-dot{width:10px;height:10px;border-radius:50%;background:var(--b);flex-shrink:0}
+.idea-title{flex:1;font-size:15px;font-weight:500}
+.idea-time{font-size:11px;color:var(--ts)}
+.idea-arrow{color:var(--gr);font-size:16px}
+
+/* 灵感编辑页 */
+.idea-edit-title{width:100%;padding:16px 20px;border:none;border-bottom:1px solid var(--bd);font-size:18px;font-weight:600;outline:none;background:var(--w)}
+.idea-edit-title:focus{border-bottom-color:var(--g)}
+.idea-edit-body{width:100%;padding:16px 20px;border:none;font-size:15px;line-height:1.8;outline:none;min-height:300px;background:var(--bg);resize:none}
+.idea-del-btn{margin:20px;padding:14px;background:none;border:1px solid var(--r);color:var(--r);border-radius:12px;font-size:15px;width:calc(100% - 40px);cursor:pointer}
+
+/* 早睡打卡 */
+.sleep-card{margin:20px;padding:24px;background:var(--w);border-radius:20px;border:1px solid var(--bd);text-align:center}
+.sleep-emoji{font-size:60px;margin-bottom:12px}
+.sleep-streak{font-size:20px;font-weight:700;margin-bottom:4px}
+.sleep-sub{font-size:13px;color:var(--ts);margin-bottom:20px}
+.sleep-btn{padding:14px 40px;border:none;border-radius:100px;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s}
+.sleep-btn.can-check{background:var(--g);color:#fff}
+.sleep-btn.can-check:active{transform:scale(0.95)}
+.sleep-btn.checked{background:var(--gl);color:var(--g)}
+.sleep-cal{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;border:1px solid var(--bd)}
+.sleep-cal-title{font-size:14px;font-weight:600;margin-bottom:12px;text-align:center}
+.sleep-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.sleep-grid .wk{font-size:11px;color:var(--ts);padding:4px 0}
+.sleep-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px}
+.sleep-day.checked-day{background:var(--gl);color:var(--g);font-weight:700}
+.sleep-day.missed{color:#BDBDBD}
+.sleep-day.today-s{box-shadow:inset 0 0 0 1.5px var(--g)}
+
+/* 空状态 */
+.es{text-align:center;padding:40px 20px;color:var(--ts)}
 .es .ei{font-size:48px;margin-bottom:12px}
-.es p{font-size:15px;line-height:1.6}
+.es p{font-size:14px;line-height:1.6}
+
+/* 庆祝 */
 .conf{position:fixed;width:10px;height:10px;z-index:10000;border-radius:2px;pointer-events:none}
 .co{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .3s}
 .co.show{opacity:1}
@@ -79,11 +149,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </style>
 </head>
 <body>
-<!-- 日历页 -->
+<!-- ===== 日历页 ===== -->
 <div class="page" id="page-cal">
-<div class="header">
-<h1>📅 日历</h1>
-</div>
 <div class="cal-nav">
 <button onclick="changeMonth(-1)">◀</button>
 <span class="ml" id="monthLabel"></span>
@@ -98,14 +165,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 <div><div class="sn" id="statTotal">0</div><div class="sl">有计划天数</div></div>
 <div><div class="sn" id="statRate">0%</div><div class="sl">完成率</div></div>
 </div>
+<div class="month-plan">
+<div class="month-plan-title">📝 本月计划</div>
+<div id="monthPlanList"></div>
+</div>
 </div>
 
-<!-- 今日页 -->
+<!-- ===== 今日页 ===== -->
 <div class="page active" id="page-today">
-<div class="header">
-<h1>📋 今日计划</h1>
-<button class="header-btn" onclick="goToDate(todayStr())">今</button>
-</div>
 <div class="di">
 <div class="dt" id="todayDate"></div>
 <div class="dd" id="todayTitle"></div>
@@ -122,39 +189,105 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </div>
 <div class="aa">
 <div class="ar">
-<input class="ai" id="newTask" type="text" placeholder="添加今日计划..." 
+<input class="ai" id="newTask" type="text" placeholder="添加今日计划..."
   onkeydown="if(event.key==='Enter')addFlexTask()">
 <button class="ab" onclick="addFlexTask()">+</button>
 </div>
 </div>
 </div>
 
-<!-- 固定项目页 -->
-<div class="page" id="page-routine">
-<div class="header">
-<h1>🔁 固定项目</h1>
+<!-- ===== Other页 ===== -->
+<div class="page" id="page-other">
+<div style="padding:20px 20px 8px;font-size:20px;font-weight:700;">Other</div>
+<div class="other-list">
+<div class="other-card" onclick="openSub('routine')">
+<div class="oc-icon green">📌</div>
+<div class="oc-info"><div class="oc-title">固定事项</div><div class="oc-desc">管理每日自动出现的计划</div></div>
+<div class="oc-arrow">›</div>
 </div>
-<div class="rd">这里管理你每天固定要做的事，添加后会自动出现在每日计划中。</div>
+<div class="other-card" onclick="openSub('ideas')">
+<div class="oc-icon blue">💡</div>
+<div class="oc-info"><div class="oc-title">灵感</div><div class="oc-desc">随时记录你的想法</div></div>
+<div class="oc-arrow">›</div>
+</div>
+<div class="other-card" onclick="openSub('sleep')">
+<div class="oc-icon orange">🌙</div>
+<div class="oc-info"><div class="oc-title">早睡打卡</div><div class="oc-desc">23:30 熄灯，坚持早睡</div></div>
+<div class="oc-arrow">›</div>
+</div>
+</div>
+</div>
+
+<!-- ===== 子页面：固定事项 ===== -->
+<div class="sub-page" id="sub-routine">
+<div class="sub-header">
+<button class="sub-back" onclick="closeSub()">←</button>
+<div class="sub-title">固定事项</div>
+</div>
+<div style="padding:8px 20px 12px;font-size:13px;color:var(--ts);line-height:1.5;">添加后会每天自动出现在今日计划中</div>
 <div id="routineList"></div>
 <div id="routineEmpty" class="es" style="display:none">
 <div class="ei">📝</div>
-<p>还没有固定项目<br>添加后每天自动出现在今日计划里</p>
+<p>还没有固定项目<br>添加后每天自动出现</p>
 </div>
 <div class="aa">
 <div class="ar">
-<input class="ai" id="newRoutine" type="text" placeholder="添加固定项目..." 
+<input class="ai" id="newRoutine" type="text" placeholder="添加固定项目..."
   onkeydown="if(event.key==='Enter')addRoutine()">
 <button class="ab" onclick="addRoutine()">+</button>
 </div>
 </div>
 </div>
 
-<!-- 庆祝弹层 -->
+<!-- ===== 子页面：灵感列表 ===== -->
+<div class="sub-page" id="sub-ideas">
+<div class="sub-header">
+<button class="sub-back" onclick="closeSub()">←</button>
+<div class="sub-title">灵感</div>
+<button style="margin-left:auto;background:var(--g);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer" onclick="newIdea()">+ 新增</button>
+</div>
+<div id="ideaList" style="padding-top:8px"></div>
+<div id="ideaEmpty" class="es">
+<div class="ei">💡</div>
+<p>还没有灵感<br>点右上角新增一条吧</p>
+</div>
+</div>
+
+<!-- ===== 子页面：灵感编辑 ===== -->
+<div class="sub-page" id="sub-idea-edit">
+<div class="sub-header">
+<button class="sub-back" onclick="saveAndBackIdea()">←</button>
+<div class="sub-title">编辑灵感</div>
+</div>
+<input class="idea-edit-title" id="ideaEditTitle" placeholder="灵感标题...">
+<textarea class="idea-edit-body" id="ideaEditBody" placeholder="写下你的想法..."></textarea>
+<button class="idea-del-btn" id="ideaDelBtn" onclick="deleteIdea()">删除这条灵感</button>
+</div>
+
+<!-- ===== 子页面：早睡打卡 ===== -->
+<div class="sub-page" id="sub-sleep">
+<div class="sub-header">
+<button class="sub-back" onclick="closeSub()">←</button>
+<div class="sub-title">早睡打卡</div>
+</div>
+<div class="sleep-card">
+<div class="sleep-emoji" id="sleepEmoji">🌙</div>
+<div class="sleep-streak" id="sleepStreak">已连续早睡 0 天</div>
+<div class="sleep-sub">目标：23:30 熄灯</div>
+<button class="sleep-btn can-check" id="sleepBtn" onclick="doSleepCheck()">今日打卡 🌙</button>
+</div>
+<div class="sleep-cal">
+<div class="sleep-cal-title" id="sleepCalTitle">本月打卡记录</div>
+<div class="sleep-grid" id="sleepGrid"></div>
+</div>
+</div>
+
+<!-- ===== 庆祝弹层 ===== -->
 <div class="co" id="celebOverlay">
 <div class="ct" id="celebText"></div>
 </div>
 
-<!-- 底部导航 -->
+<!-- ===== 底部导航 ===== -->
 <div class="bottom-nav">
 <button class="nav-item" onclick="switchPage('cal')">
 <span class="nav-icon">📅</span>
@@ -164,9 +297,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 <span class="nav-icon">📋</span>
 <span class="nav-label">今日</span>
 </button>
-<button class="nav-item" onclick="switchPage('routine')">
-<span class="nav-icon">🔁</span>
-<span class="nav-label">项目</span>
+<button class="nav-item" onclick="switchPage('other')">
+<span class="nav-icon">💡</span>
+<span class="nav-label">Other</span>
 </button>
 </div>
 <script>
@@ -177,13 +310,25 @@ function load(key, def) {
 }
 function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-// 固定项目列表: [{id, text, createdDate}]
+// 固定项目: [{id, text, createdDate}]
 function getRoutines() { return load('routines', []); }
 function saveRoutines(r) { save('routines', r); }
 
-// 某天的数据: {fixed:{id:bool}, flex:[{id,text,done}], removedFixed:[id]}
+// 某天数据: {fixed:{id:bool}, flex:[{id,text,done}], removedFixed:[id]}
 function getDayData(dateStr) { return load('day_' + dateStr, null); }
 function saveDayData(dateStr, data) { save('day_' + dateStr, data); }
+
+// 月度计划: {text1, text2, text3, text4}
+function getMonthPlan(yearMonth) { return load('mp_' + yearMonth, {t1:'',t2:'',t3:'',t4:''}); }
+function saveMonthPlan(yearMonth, data) { save('mp_' + yearMonth, data); }
+
+// 灵感: [{id, title, body, time}]
+function getIdeas() { return load('ideas', []); }
+function saveIdeas(list) { save('ideas', list); }
+
+// 早睡打卡: {dates: ['2026-07-21', ...]}
+function getSleepData() { return load('sleep', {dates:[]}); }
+function saveSleepData(d) { save('sleep', d); }
 
 // ===== 日期工具 =====
 function todayStr() {
@@ -199,16 +344,47 @@ function formatDateCN(str) {
   var weeks = ['日','一','二','三','四','五','六'];
   return +p[0] + '年' + +p[1] + '月' + +p[2] + '日 星期' + weeks[d.getDay()];
 }
-function getWeekdayName(str) {
-  var p = str.split('-');
-  var d = new Date(+p[0], +p[1]-1, +p[2]);
-  var weeks = ['周日','周一','周二','周三','周四','周五','周六'];
-  return weeks[d.getDay()];
-}
 
-// ===== 当前查看的日期 =====
+// ===== 全局状态 =====
 var currentDate = todayStr();
 var calYear, calMonth;
+var currentIdeaId = null;
+
+// ===== 页面切换 =====
+function switchPage(name) {
+  // 关闭所有子页面
+  document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
+  // 切换主页面
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  // 底部导航高亮
+  document.querySelectorAll('.nav-item').forEach(function(n, i) {
+    n.classList.remove('active');
+    if ((name==='cal'&&i===0)||(name==='today'&&i===1)||(name==='other'&&i===2))
+      n.classList.add('active');
+  });
+  // 显示底部导航
+  document.querySelector('.bottom-nav').style.display = 'flex';
+
+  if (name === 'cal') renderCalendar();
+  if (name === 'today') renderToday();
+}
+
+function openSub(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('sub-' + name).classList.add('active');
+  document.querySelector('.bottom-nav').style.display = 'none';
+
+  if (name === 'routine') renderRoutines();
+  if (name === 'ideas') renderIdeas();
+  if (name === 'sleep') renderSleep();
+}
+
+function closeSub() {
+  document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
+  switchPage('other');
+}
 
 // ===== 初始化当天数据 =====
 function ensureDayData(dateStr) {
@@ -217,10 +393,8 @@ function ensureDayData(dateStr) {
     data = { fixed: {}, flex: [], removedFixed: [] };
   }
   if (!data.removedFixed) data.removedFixed = [];
-  // 同步固定项目
   var routines = getRoutines();
   routines.forEach(function(r) {
-    // 只添加创建日期 <= 当前日期 的固定项目
     if (r.createdDate <= dateStr) {
       if (!(r.id in data.fixed) && data.removedFixed.indexOf(r.id) === -1) {
         data.fixed[r.id] = false;
@@ -231,11 +405,10 @@ function ensureDayData(dateStr) {
   return data;
 }
 
-// ===== 获取某天所有任务用于判断完成情况 =====
+// ===== 获取某天完成状态 =====
 function getDayStatus(dateStr) {
   var data = getDayData(dateStr);
   if (!data) {
-    // 检查是否有固定项目适用于这天
     var routines = getRoutines();
     var hasRoutine = false;
     routines.forEach(function(r) {
@@ -245,32 +418,15 @@ function getDayStatus(dateStr) {
     data = ensureDayData(dateStr);
   }
   var total = 0, done = 0;
-  // 固定项目
   var fixedKeys = Object.keys(data.fixed);
   total += fixedKeys.length;
   fixedKeys.forEach(function(k) { if (data.fixed[k]) done++; });
-  // 灵活任务
   if (data.flex) {
     total += data.flex.length;
     data.flex.forEach(function(f) { if (f.done) done++; });
   }
   return { total: total, done: done };
 }
-
-// ===== 页面切换 =====
-function switchPage(name) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(function(n, i) {
-    n.classList.remove('active');
-    if ((name==='cal'&&i===0)||(name==='today'&&i===1)||(name==='routine'&&i===2))
-      n.classList.add('active');
-  });
-  if (name === 'cal') renderCalendar();
-  if (name === 'today') renderToday();
-  if (name === 'routine') renderRoutines();
-}
-
 // ===== 日历页 =====
 function changeMonth(delta) {
   calMonth += delta;
@@ -288,7 +444,6 @@ function renderCalendar() {
   var today = todayStr();
   var doneDays = 0, taskDays = 0;
 
-  // 空白填充
   for (var i = 0; i < firstDay; i++) {
     var empty = document.createElement('div');
     empty.className = 'dc empty';
@@ -300,7 +455,6 @@ function renderCalendar() {
     var cell = document.createElement('button');
     cell.className = 'dc';
     cell.textContent = d;
-    cell.setAttribute('data-date', ds);
 
     if (ds === today) cell.classList.add('today');
     if (ds > today) {
@@ -327,18 +481,48 @@ function renderCalendar() {
   document.getElementById('statDone').textContent = doneDays;
   document.getElementById('statTotal').textContent = taskDays;
   document.getElementById('statRate').textContent = taskDays > 0 ? Math.round(doneDays/taskDays*100) + '%' : '0%';
+
+  // 月度计划
+  renderMonthPlan();
 }
 
 function goToDate(dateStr) {
   currentDate = dateStr;
   switchPage('today');
 }
+
+// ===== 月度计划 =====
+function renderMonthPlan() {
+  var ym = calYear + '-' + String(calMonth).padStart(2,'0');
+  var mp = getMonthPlan(ym);
+  var list = document.getElementById('monthPlanList');
+  list.innerHTML = '';
+
+  for (var i = 1; i <= 4; i++) {
+    var div = document.createElement('div');
+    div.className = 'mp-item';
+    div.innerHTML = '<div class="mp-dot"></div>' +
+      '<input class="mp-text" type="text" placeholder="计划 ' + i + '..." value="' + escHtml(mp['t'+i] || '') + '" data-idx="' + i + '" data-ym="' + ym + '">';
+    list.appendChild(div);
+  }
+
+  // 绑定事件
+  list.querySelectorAll('.mp-text').forEach(function(input) {
+    input.addEventListener('blur', function() {
+      var ym2 = this.getAttribute('data-ym');
+      var idx = this.getAttribute('data-idx');
+      var mp2 = getMonthPlan(ym2);
+      mp2['t' + idx] = this.value.trim();
+      saveMonthPlan(ym2, mp2);
+    });
+  });
+}
+
 // ===== 今日页渲染 =====
 function renderToday() {
   var data = ensureDayData(currentDate);
   var today = todayStr();
 
-  // 头部信息
   document.getElementById('todayDate').textContent = formatDateCN(currentDate);
   if (currentDate === today) {
     document.getElementById('todayTitle').textContent = '今天的计划';
@@ -352,7 +536,7 @@ function renderToday() {
   var routineMap = {};
   routines.forEach(function(r) { routineMap[r.id] = r; });
 
-  // 渲染固定任务
+  // 固定任务
   var fixedList = document.getElementById('fixedList');
   fixedList.innerHTML = '';
   var fixedKeys = Object.keys(data.fixed);
@@ -364,7 +548,7 @@ function renderToday() {
     fixedSection.style.display = 'block';
     fixedKeys.forEach(function(id) {
       var isDone = data.fixed[id];
-      var name = routineMap[id] ? routineMap[id].text : '已删除的项目';
+      var name = routineMap[id] ? routineMap[id].text : '(已删除)';
       var div = document.createElement('div');
       div.className = 'ti' + (isDone ? ' done' : '');
       div.innerHTML =
@@ -376,17 +560,16 @@ function renderToday() {
     });
   }
 
-  // 渲染灵活任务
+  // 灵活任务
   var flexList = document.getElementById('flexList');
   flexList.innerHTML = '';
   var flexSection = document.getElementById('flexSection');
 
   if (data.flex.length === 0 && fixedKeys.length > 0) {
     flexSection.style.display = 'block';
-    flexList.innerHTML = '<div class="es" style="padding:20px"><p style="font-size:14px;color:var(--ts)">暂无新增任务</p></div>';
   } else if (data.flex.length === 0 && fixedKeys.length === 0) {
     flexSection.style.display = 'block';
-    flexList.innerHTML = '<div class="es" style="padding:30px"><div class="ei">📝</div><p>还没有计划<br>添加固定项目或新增今日任务吧</p></div>';
+    flexList.innerHTML = '<div class="es" style="padding:20px"><div class="ei">📝</div><p>还没有计划<br>去Other添加固定事项，或在下方新增</p></div>';
   } else {
     flexSection.style.display = 'block';
     data.flex.forEach(function(task, idx) {
@@ -401,7 +584,6 @@ function renderToday() {
     });
   }
 
-  // 更新进度
   updateProgress(data);
 }
 
@@ -424,7 +606,6 @@ function updateProgress(data) {
   document.getElementById('progressBar').style.width = pct + '%';
   document.getElementById('progressText').textContent = done + ' / ' + total + ' 已完成';
 
-  // 全部完成庆祝
   if (total > 0 && done === total) {
     setTimeout(function() { celebrate(); }, 300);
   }
@@ -472,8 +653,7 @@ function addFlexTask() {
   input.value = '';
   renderToday();
 }
-
-// ===== 固定项目管理 =====
+// ===== 固定事项管理 =====
 function renderRoutines() {
   var routines = getRoutines();
   var list = document.getElementById('routineList');
@@ -510,7 +690,6 @@ function addRoutine() {
   var data = getDayData(todayStr());
   if (data) {
     data.fixed[newItem.id] = false;
-    // 如果之前被移除过，取消移除
     var rmIdx = data.removedFixed.indexOf(newItem.id);
     if (rmIdx !== -1) data.removedFixed.splice(rmIdx, 1);
     saveDayData(todayStr(), data);
@@ -525,13 +704,203 @@ function removeRoutine(idx) {
   saveRoutines(routines);
   renderRoutines();
 }
+
+// ===== 灵感管理 =====
+function renderIdeas() {
+  var ideas = getIdeas();
+  var list = document.getElementById('ideaList');
+  var empty = document.getElementById('ideaEmpty');
+  list.innerHTML = '';
+
+  if (ideas.length === 0) {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    // 按时间倒序
+    var sorted = ideas.slice().sort(function(a, b) { return b.time - a.time; });
+    sorted.forEach(function(idea) {
+      var div = document.createElement('div');
+      div.className = 'idea-item';
+      var timeStr = formatTime(idea.time);
+      div.innerHTML =
+        '<div class="idea-dot"></div>' +
+        '<span class="idea-title">' + escHtml(idea.title || '无标题') + '</span>' +
+        '<span class="idea-time">' + timeStr + '</span>' +
+        '<span class="idea-arrow">›</span>';
+      div.onclick = (function(id) {
+        return function() { openIdeaEdit(id); };
+      })(idea.id);
+      list.appendChild(div);
+    });
+  }
+}
+
+function formatTime(ts) {
+  var d = new Date(ts);
+  return (d.getMonth()+1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function newIdea() {
+  var ideas = getIdeas();
+  var idea = { id: 'idea_' + Date.now(), title: '', body: '', time: Date.now() };
+  ideas.push(idea);
+  saveIdeas(ideas);
+  openIdeaEdit(idea.id);
+}
+
+function openIdeaEdit(id) {
+  currentIdeaId = id;
+  var ideas = getIdeas();
+  var idea = ideas.find(function(i) { return i.id === id; });
+  if (!idea) return;
+
+  document.getElementById('ideaEditTitle').value = idea.title;
+  document.getElementById('ideaEditBody').value = idea.body;
+
+  document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('sub-idea-edit').classList.add('active');
+}
+
+function saveAndBackIdea() {
+  if (currentIdeaId) {
+    var ideas = getIdeas();
+    var idx = ideas.findIndex(function(i) { return i.id === currentIdeaId; });
+    if (idx !== -1) {
+      ideas[idx].title = document.getElementById('ideaEditTitle').value.trim();
+      ideas[idx].body = document.getElementById('ideaEditBody').value;
+      ideas[idx].time = Date.now();
+      // 如果标题和内容都为空，自动删除
+      if (!ideas[idx].title && !ideas[idx].body) {
+        ideas.splice(idx, 1);
+      }
+      saveIdeas(ideas);
+    }
+  }
+  currentIdeaId = null;
+  openSub('ideas');
+}
+
+function deleteIdea() {
+  if (!currentIdeaId) return;
+  var ideas = getIdeas();
+  ideas = ideas.filter(function(i) { return i.id !== currentIdeaId; });
+  saveIdeas(ideas);
+  currentIdeaId = null;
+  openSub('ideas');
+}
+
+// ===== 早睡打卡 =====
+function renderSleep() {
+  var data = getSleepData();
+  var today = todayStr();
+  var todayChecked = data.dates.indexOf(today) !== -1;
+
+  // 计算连续天数
+  var streak = 0;
+  var checkDate = new Date();
+  // 如果今天已打卡，从今天开始算；否则从昨天开始算
+  if (!todayChecked) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  while (true) {
+    var ds = dateToStr(checkDate);
+    if (data.dates.indexOf(ds) !== -1) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  // 显示信息
+  document.getElementById('sleepStreak').textContent = '已连续早睡 ' + streak + ' 天';
+  
+  if (todayChecked) {
+    document.getElementById('sleepEmoji').textContent = '😴';
+    document.getElementById('sleepBtn').textContent = '今日已打卡 ✓';
+    document.getElementById('sleepBtn').className = 'sleep-btn checked';
+  } else {
+    document.getElementById('sleepEmoji').textContent = '🌙';
+    document.getElementById('sleepBtn').textContent = '今日打卡 🌙';
+    document.getElementById('sleepBtn').className = 'sleep-btn can-check';
+  }
+
+  // 渲染打卡日历
+  renderSleepCal(data);
+}
+
+function doSleepCheck() {
+  var data = getSleepData();
+  var today = todayStr();
+  if (data.dates.indexOf(today) !== -1) return; // 已打卡
+  data.dates.push(today);
+  saveSleepData(data);
+  renderSleep();
+}
+
+function renderSleepCal(data) {
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = now.getMonth() + 1;
+  document.getElementById('sleepCalTitle').textContent = month + '月打卡记录';
+
+  var grid = document.getElementById('sleepGrid');
+  grid.innerHTML = '';
+
+  // 星期头
+  var wks = ['日','一','二','三','四','五','六'];
+  wks.forEach(function(w) {
+    var span = document.createElement('span');
+    span.className = 'wk';
+    span.textContent = w;
+    grid.appendChild(span);
+  });
+
+  var firstDay = new Date(year, month - 1, 1).getDay();
+  var daysInMonth = new Date(year, month, 0).getDate();
+  var today = todayStr();
+
+  // 空白
+  for (var i = 0; i < firstDay; i++) {
+    var empty = document.createElement('div');
+    empty.className = 'sleep-day';
+    grid.appendChild(empty);
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var ds = year + '-' + String(month).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    var cell = document.createElement('div');
+    cell.className = 'sleep-day';
+    cell.textContent = d;
+
+    if (ds === today) cell.classList.add('today-s');
+
+    if (data.dates.indexOf(ds) !== -1) {
+      cell.classList.add('checked-day');
+    } else if (ds < today) {
+      cell.classList.add('missed');
+    }
+
+    grid.appendChild(cell);
+  }
+}
 // ===== 庆祝效果 =====
-var celebShown = {};
+var lastCelebState = {};
 
 function celebrate() {
   var key = currentDate;
-  if (celebShown[key]) return;
-  celebShown[key] = true;
+  var data = getDayData(key);
+  if (!data) return;
+  
+  // 生成当前完成状态的签名
+  var total = Object.keys(data.fixed).length + data.flex.length;
+  var done = 0;
+  Object.keys(data.fixed).forEach(function(k) { if (data.fixed[k]) done++; });
+  data.flex.forEach(function(f) { if (f.done) done++; });
+  
+  var stateKey = key + '_' + total + '_' + done;
+  if (lastCelebState[key] === stateKey) return;
+  lastCelebState[key] = stateKey;
 
   // 撒花
   launchConfetti();
@@ -594,8 +963,6 @@ function init() {
   calYear = now.getFullYear();
   calMonth = now.getMonth() + 1;
   currentDate = todayStr();
-
-  // 默认显示今日页
   switchPage('today');
 }
 
