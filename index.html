@@ -52,23 +52,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .mp-add:active{background:var(--grl)}
 
 /* 猫咪桌宠 */
-.cat-wrap{display:flex;flex-direction:column;align-items:center;padding:16px 20px 8px;position:relative}
-.cat-container{position:relative;width:64px;height:64px;cursor:pointer}
-.cat-body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:48px;line-height:1;transition:transform .3s}
-.cat-bubble{position:absolute;top:-8px;left:70px;background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:4px 10px;font-size:12px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.08);animation:bubbleIn .4s ease}
-.cat-bubble::before{content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:var(--bd)}
-.cat-bubble::after{content:'';position:absolute;left:-5px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-right-color:var(--w)}
-@keyframes bubbleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-@keyframes catWave{0%,100%{transform:translateX(-50%) rotate(0deg)}25%{transform:translateX(-50%) rotate(-10deg)}75%{transform:translateX(-50%) rotate(10deg)}}
-@keyframes catSleep{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(3px)}}
-@keyframes catType{0%,100%{transform:translateX(-50%) translateY(0)}25%{transform:translateX(-50%) translateY(-2px)}75%{transform:translateX(-50%) translateY(-2px) rotate(2deg)}}
-@keyframes catJump{0%,100%{transform:translateX(-50%) translateY(0)}30%{transform:translateX(-50%) translateY(-16px) scale(1.1)}60%{transform:translateX(-50%) translateY(-8px)}}
-@keyframes catMeow{0%{transform:translateX(-50%) scale(1)}15%{transform:translateX(-50%) scale(1.15)}30%{transform:translateX(-50%) scale(1)}60%{transform:translateX(-50%) rotate(8deg)}100%{transform:translateX(-50%) rotate(0deg)}}
-.cat-wave .cat-body{animation:catWave 1s ease-in-out infinite}
-.cat-sleep .cat-body{animation:catSleep 2s ease-in-out infinite}
-.cat-type .cat-body{animation:catType .4s ease-in-out infinite}
-.cat-jump .cat-body{animation:catJump .6s ease-in-out 3}
-.cat-meow .cat-body{animation:catMeow .6s ease-in-out 1}
+.cat-wrap{position:fixed;right:12px;top:22%;z-index:150;display:flex;flex-direction:column;align-items:center}
+.cat-container{position:relative;cursor:pointer;width:56px;height:62px}
+.cat-bubble{position:absolute;top:-28px;right:50%;transform:translateX(50%);background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:3px 8px;font-size:11px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.1);animation:bubbleIn .4s ease}
+.cat-bubble::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--w)}
+.cat-bubble::before{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
+@keyframes bubbleIn{from{opacity:0;transform:translateX(50%) scale(.8)}to{opacity:1;transform:translateX(50%) scale(1)}}
+
+/* 简笔画猫 */
+.cat-svg{width:56px;height:56px;transition:transform .3s}
+
+@keyframes catWave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes catSleep{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+@keyframes catType{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-2px) rotate(-2deg)}40%{transform:translateY(0) rotate(2deg)}60%{transform:translateY(-2px) rotate(-1deg)}80%{transform:translateY(0) rotate(1deg)}}
+@keyframes catJump{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.05)}60%{transform:translateY(-6px) scale(1)}}
+@keyframes catMeow{0%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}60%{transform:rotate(6deg)}100%{transform:rotate(0deg)}}
+
+.cat-wave .cat-svg{animation:catWave 1s ease-in-out infinite}
+.cat-sleep .cat-svg{animation:catSleep 2s ease-in-out infinite}
+.cat-type .cat-svg{animation:catType .5s ease-in-out infinite}
+.cat-jump .cat-svg{animation:catJump .6s ease-in-out 3}
+.cat-meow .cat-svg{animation:catMeow .6s ease-in-out 1}
 
 /* 今日页 */
 .di{padding:8px 20px 6px}
@@ -193,12 +197,6 @@ min-height:300px;background:var(--bg);resize:none}
 
 <!-- ===== 今日页 ===== -->
 <div class="page active" id="page-today">
-<div class="cat-wrap">
-<div class="cat-container" id="catContainer" onclick="catMeow()">
-<div class="cat-body" id="catBody">🐱</div>
-</div>
-<div class="cat-bubble" id="catBubble">早上好</div>
-</div>
 <div class="di">
 <div class="dt" id="todayDate"></div>
 <div class="dd" id="todayTitle"></div>
@@ -312,6 +310,33 @@ min-height:300px;background:var(--bg);resize:none}
 </div>
 </div>
 
+<div class="cat-wrap" id="catWrap">
+<div class="cat-bubble" id="catBubble">早上好~</div>
+<div class="cat-container" id="catContainer" onclick="catMeow()">
+<svg class="cat-svg" id="catSvg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- 耳朵 -->
+<path d="M16 20L20 8L26 18" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#fff"/>
+<path d="M40 20L36 8L30 18" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#fff"/>
+<!-- 头 -->
+<circle cx="28" cy="28" r="14" stroke="#555" stroke-width="2" fill="#fff"/>
+<!-- 眼睛 -->
+<circle class="cat-eye-l" cx="23" cy="26" r="2.5" fill="#555"/>
+<circle class="cat-eye-r" cx="33" cy="26" r="2.5" fill="#555"/>
+<!-- 鼻子 -->
+<path d="M27 30L28 31.5L29 30" stroke="#E91E63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- 嘴 -->
+<path class="cat-mouth" d="M25 33Q28 35 31 33" stroke="#555" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+<!-- 胡须 -->
+<line x1="10" y1="28" x2="19" y2="29" stroke="#999" stroke-width="1" stroke-linecap="round"/>
+<line x1="10" y1="32" x2="19" y2="31" stroke="#999" stroke-width="1" stroke-linecap="round"/>
+<line x1="46" y1="28" x2="37" y2="29" stroke="#999" stroke-width="1" stroke-linecap="round"/>
+<line x1="46" y1="32" x2="37" y2="31" stroke="#999" stroke-width="1" stroke-linecap="round"/>
+<!-- 身体(小) -->
+<path d="M20 42Q28 50 36 42" stroke="#555" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>
+</div>
+</div>
+
 <!-- ===== 庆祝弹层 ===== -->
 <div class="co" id="celebOverlay">
 <div class="ct" id="celebText"></div>
@@ -397,6 +422,9 @@ function switchPage(name) {
   });
   document.querySelector('.bottom-nav').style.display = 'flex';
 
+  var catEl = document.getElementById('catWrap');
+  if (catEl) catEl.style.display = (name === 'today') ? 'flex' : 'none';
+
   if (name === 'cal') renderCalendar();
   if (name === 'today') renderToday();
 }
@@ -406,6 +434,9 @@ function openSub(name) {
   document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('sub-' + name).classList.add('active');
   document.querySelector('.bottom-nav').style.display = 'none';
+
+  var catEl = document.getElementById('catWrap');
+  if (catEl) catEl.style.display = 'none';
 
   if (name === 'routine') renderRoutines();
   if (name === 'ideas') renderIdeas();
@@ -1029,41 +1060,50 @@ function getCatState(data) {
 }
 
 function updateCat(data) {
-  if (catMeowing) return; // 喵叫中不打断
+  if (catMeowing) return;
 
   var state = getCatState(data);
   var container = document.getElementById('catContainer');
-  var body = document.getElementById('catBody');
   var bubble = document.getElementById('catBubble');
+  var eyeL = document.querySelector('.cat-eye-l');
+  var eyeR = document.querySelector('.cat-eye-r');
+  var mouth = document.querySelector('.cat-mouth');
 
-  // 清除所有动画class
   container.className = 'cat-container';
+
+  // 恢复眼睛
+  if (eyeL) { eyeL.setAttribute('ry', '2.5'); eyeL.setAttribute('rx', '2.5'); }
+  if (eyeR) { eyeR.setAttribute('ry', '2.5'); eyeR.setAttribute('rx', '2.5'); }
+  if (mouth) mouth.setAttribute('d', 'M25 33Q28 35 31 33');
 
   switch(state) {
     case 'morning':
-      body.textContent = '🐱';
       container.classList.add('cat-wave');
       bubble.textContent = '早上好~';
       break;
     case 'afternoon':
-      body.textContent = '😺';
       container.classList.add('cat-sleep');
       bubble.textContent = '好困呀~';
+      // 眯眼
+      if (eyeL) { eyeL.setAttribute('ry', '1'); }
+      if (eyeR) { eyeR.setAttribute('ry', '1'); }
       break;
     case 'evening':
-      body.textContent = '🐱';
       container.classList.add('cat-type');
       bubble.textContent = '撸起袖子加油干！';
       break;
     case 'night':
-      body.textContent = '😾';
       container.classList.add('cat-sleep');
       bubble.textContent = '该睡觉了~';
+      // 闭眼
+      if (eyeL) { eyeL.setAttribute('ry', '0.8'); }
+      if (eyeR) { eyeR.setAttribute('ry', '0.8'); }
       break;
     case 'complete':
-      body.textContent = '😸';
       container.classList.add('cat-jump');
       bubble.textContent = '太棒了！🎉';
+      // 开心嘴
+      if (mouth) mouth.setAttribute('d', 'M24 32Q28 37 32 32');
       break;
   }
 }
@@ -1071,12 +1111,13 @@ function updateCat(data) {
 function catMeow() {
   catMeowing = true;
   var container = document.getElementById('catContainer');
-  var body = document.getElementById('catBody');
   var bubble = document.getElementById('catBubble');
+  var mouth = document.querySelector('.cat-mouth');
 
   container.className = 'cat-container cat-meow';
-  body.textContent = '😺';
   bubble.textContent = '喵~';
+  // 张嘴
+  if (mouth) mouth.setAttribute('d', 'M25 32Q28 36 31 32');
 
   setTimeout(function() {
     catMeowing = false;
@@ -1084,6 +1125,7 @@ function catMeow() {
     if (data) updateCat(data);
   }, 1200);
 }
+
 // ===== 庆祝效果 =====
 var lastCelebState = {};
 
