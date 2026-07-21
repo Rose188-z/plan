@@ -16,6 +16,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .sub-page{display:none;min-height:100vh;padding-bottom:80px}
 .sub-page.active{display:block}
 
+/* 底部导航 */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid var(--bd);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 8px;background:none;border:none;color:var(--gr);cursor:pointer;gap:3px}
 .nav-item.active{color:var(--g)}
@@ -43,10 +44,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .month-plan{margin:0 20px 20px;padding:16px;background:var(--w);border-radius:16px;border:1px solid var(--bd)}
 .month-plan-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--t)}
 .mp-item{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mp-item.done .mp-text{text-decoration:line-through;color:var(--ts);opacity:.6}
 .mp-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:none;transition:all .3s}
 .mp-check.checked{border-color:var(--g);background:var(--g)}
 .mp-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
-.mp-item.done .mp-text{text-decoration:line-through;color:var(--ts);opacity:.6}
 .mp-text{flex:1;font-size:14px;padding:8px 0;border:none;border-bottom:1px solid var(--bd);background:none;outline:none;color:var(--t)}
 .mp-text:focus{border-bottom-color:var(--g)}
 .mp-text::placeholder{color:#BDBDBD}
@@ -54,31 +55,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .mp-add{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;margin-top:4px;border:1px dashed var(--bd);border-radius:10px;color:var(--ts);font-size:13px;cursor:pointer;background:none;width:100%}
 .mp-add:active{background:var(--grl)}
 
-/* 猫咪桌宠 */
-.cat-wrap{position:fixed;right:12px;top:22%;z-index:150;display:flex;flex-direction:column;align-items:center}
-.cat-container{position:relative;cursor:pointer;width:56px;height:62px}
-.cat-bubble{position:absolute;top:-28px;right:50%;transform:translateX(50%);background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:3px 8px;font-size:11px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.1);animation:bubbleIn .4s ease}
-.cat-bubble::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--w)}
-.cat-bubble::before{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
-@keyframes bubbleIn{from{opacity:0;transform:translateX(50%) scale(.8)}to{opacity:1;transform:translateX(50%) scale(1)}}
-
-/* 简笔画猫 */
+/* 猫咪桌宠 - 右下角悬浮 */
+.cat-wrap{position:fixed;right:14px;bottom:90px;z-index:150;display:flex;flex-direction:column;align-items:center}
+.cat-container{position:relative;cursor:pointer;width:56px;height:56px}
+.cat-bubble{position:absolute;top:-30px;right:0;background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:3px 8px;font-size:11px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.1);animation:bubbleIn .4s ease}
+.cat-bubble::after{content:'';position:absolute;bottom:-5px;right:16px;border:5px solid transparent;border-top-color:var(--w)}
+.cat-bubble::before{content:'';position:absolute;bottom:-6px;right:16px;border:5px solid transparent;border-top-color:var(--bd)}
+@keyframes bubbleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
 .cat-svg{width:56px;height:56px;transition:transform .3s}
-
 @keyframes catWave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 @keyframes catSleep{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 @keyframes catType{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-2px) rotate(-2deg)}40%{transform:translateY(0) rotate(2deg)}60%{transform:translateY(-2px) rotate(-1deg)}80%{transform:translateY(0) rotate(1deg)}}
 @keyframes catJump{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.05)}60%{transform:translateY(-6px) scale(1)}}
 @keyframes catMeow{0%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}60%{transform:rotate(6deg)}100%{transform:rotate(0deg)}}
-
 .cat-wave .cat-svg{animation:catWave 1s ease-in-out infinite}
 .cat-sleep .cat-svg{animation:catSleep 2s ease-in-out infinite}
 .cat-type .cat-svg{animation:catType .5s ease-in-out infinite}
 .cat-jump .cat-svg{animation:catJump .6s ease-in-out 3}
 .cat-meow .cat-svg{animation:catMeow .6s ease-in-out 1}
-
 /* 今日页 */
-.di{padding:8px 20px 6px}
+.di{padding:16px 20px 6px}
 .di .dt{font-size:13px;color:var(--ts)}
 .di .dd{font-size:20px;font-weight:700;margin-top:2px}
 .pw{padding:0 20px 4px}
@@ -138,8 +134,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .idea-arrow{color:var(--gr);font-size:16px}
 .idea-edit-title{width:100%;padding:16px 20px;border:none;border-bottom:1px solid var(--bd);font-size:18px;font-weight:600;outline:none;background:var(--w)}
 .idea-edit-title:focus{border-bottom-color:var(--g)}
-.idea-edit-body{width:100%;padding:16px 20px;border:none;font-size:15px;line-height:1.8;outline:none;
-min-height:300px;background:var(--bg);resize:none}
+.idea-edit-body{width:100%;padding:16px 20px;border:none;font-size:15px;line-height:1.8;outline:none;min-height:300px;background:var(--bg);resize:none}
 .idea-del-btn{margin:20px;padding:14px;background:none;border:1px solid var(--r);color:var(--r);border-radius:12px;font-size:15px;width:calc(100% - 40px);cursor:pointer}
 
 /* 早睡打卡 */
@@ -194,7 +189,7 @@ min-height:300px;background:var(--bg);resize:none}
 <div class="month-plan">
 <div class="month-plan-title">📝 本月计划</div>
 <div id="monthPlanList"></div>
-<button class="mp-add" id="mpAddBtn" onclick="addMonthPlan()">+ 添加计划</button>
+<button class="mp-add" onclick="addMonthPlan()">+ 添加计划</button>
 </div>
 </div>
 
@@ -226,7 +221,6 @@ min-height:300px;background:var(--bg);resize:none}
 </div>
 </div>
 </div>
-
 <!-- ===== Other页 ===== -->
 <div class="page" id="page-other">
 <div style="padding:20px 20px 8px;font-size:20px;font-weight:700;">Other</div>
@@ -292,7 +286,7 @@ min-height:300px;background:var(--bg);resize:none}
 </div>
 <input class="idea-edit-title" id="ideaEditTitle" placeholder="灵感标题...">
 <textarea class="idea-edit-body" id="ideaEditBody" placeholder="写下你的想法..."></textarea>
-<button class="idea-del-btn" id="ideaDelBtn" onclick="deleteIdea()">删除这条灵感</button>
+<button class="idea-del-btn" onclick="deleteIdea()">删除这条灵感</button>
 </div>
 
 <!-- ===== 子页面：早睡打卡 ===== -->
@@ -313,28 +307,22 @@ min-height:300px;background:var(--bg);resize:none}
 </div>
 </div>
 
+<!-- ===== 猫咪桌宠（右下角悬浮）===== -->
 <div class="cat-wrap" id="catWrap">
 <div class="cat-bubble" id="catBubble">早上好~</div>
 <div class="cat-container" id="catContainer" onclick="catMeow()">
 <svg class="cat-svg" id="catSvg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- 耳朵 -->
 <path d="M16 20L20 8L26 18" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#fff"/>
 <path d="M40 20L36 8L30 18" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#fff"/>
-<!-- 头 -->
 <circle cx="28" cy="28" r="14" stroke="#555" stroke-width="2" fill="#fff"/>
-<!-- 眼睛 -->
-<circle class="cat-eye-l" cx="23" cy="26" r="2.5" fill="#555"/>
-<circle class="cat-eye-r" cx="33" cy="26" r="2.5" fill="#555"/>
-<!-- 鼻子 -->
+<ellipse class="cat-eye-l" cx="23" cy="26" rx="2.5" ry="2.5" fill="#555"/>
+<ellipse class="cat-eye-r" cx="33" cy="26" rx="2.5" ry="2.5" fill="#555"/>
 <path d="M27 30L28 31.5L29 30" stroke="#E91E63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<!-- 嘴 -->
 <path class="cat-mouth" d="M25 33Q28 35 31 33" stroke="#555" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-<!-- 胡须 -->
 <line x1="10" y1="28" x2="19" y2="29" stroke="#999" stroke-width="1" stroke-linecap="round"/>
 <line x1="10" y1="32" x2="19" y2="31" stroke="#999" stroke-width="1" stroke-linecap="round"/>
 <line x1="46" y1="28" x2="37" y2="29" stroke="#999" stroke-width="1" stroke-linecap="round"/>
 <line x1="46" y1="32" x2="37" y2="31" stroke="#999" stroke-width="1" stroke-linecap="round"/>
-<!-- 身体(小) -->
 <path d="M20 42Q28 50 36 42" stroke="#555" stroke-width="2" stroke-linecap="round" fill="none"/>
 </svg>
 </div>
@@ -360,6 +348,7 @@ min-height:300px;background:var(--bg);resize:none}
 <span class="nav-label">Other</span>
 </button>
 </div>
+
 <script>
 // ===== 数据管理 =====
 function load(key, def) {
@@ -371,19 +360,15 @@ function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 function getRoutines() { return load('routines', []); }
 function saveRoutines(r) { save('routines', r); }
 
-// 某天数据: {fixed:{id:bool}, flex:[{id,text,done}], carry:[{id,text,done,from}], removedFixed:[id]}
 function getDayData(dateStr) { return load('day_' + dateStr, null); }
 function saveDayData(dateStr, data) { save('day_' + dateStr, data); }
 
-// 月度计划: [{id, text}]
 function getMonthPlan(yearMonth) { return load('mp_' + yearMonth, []); }
 function saveMonthPlan(yearMonth, data) { save('mp_' + yearMonth, data); }
 
-// 灵感: [{id, title, body, time}]
 function getIdeas() { return load('ideas', []); }
 function saveIdeas(list) { save('ideas', list); }
 
-// 早睡打卡: {dates: ['2026-07-21', ...]}
 function getSleepData() { return load('sleep', {dates:[]}); }
 function saveSleepData(d) { save('sleep', d); }
 
@@ -412,7 +397,6 @@ function prevDateStr(dateStr) {
 var currentDate = todayStr();
 var calYear, calMonth;
 var currentIdeaId = null;
-
 // ===== 页面切换 =====
 function switchPage(name) {
   document.querySelectorAll('.sub-page').forEach(function(p) { p.classList.remove('active'); });
@@ -460,7 +444,6 @@ function ensureDayData(dateStr) {
   if (!data.removedFixed) data.removedFixed = [];
   if (!data.carry) data.carry = [];
 
-  // 同步固定项目
   var routines = getRoutines();
   routines.forEach(function(r) {
     if (r.createdDate <= dateStr) {
@@ -470,14 +453,13 @@ function ensureDayData(dateStr) {
     }
   });
 
-  // 遗留逻辑：从前一天拉未完成的flex和carry
+  // 遗留逻辑
   var today = todayStr();
   if (dateStr === today && data.carry.length === 0) {
     var prevDate = prevDateStr(dateStr);
     var prevData = getDayData(prevDate);
     if (prevData) {
       var carryItems = [];
-      // 前一天的flex未完成
       if (prevData.flex) {
         prevData.flex.forEach(function(f) {
           if (!f.done) {
@@ -485,7 +467,6 @@ function ensureDayData(dateStr) {
           }
         });
       }
-      // 前一天的carry未完成（继续传递）
       if (prevData.carry) {
         prevData.carry.forEach(function(c) {
           if (!c.done) {
@@ -535,6 +516,7 @@ function escHtml(s) {
   d.textContent = s;
   return d.innerHTML;
 }
+
 // ===== 日历页 =====
 function changeMonth(delta) {
   calMonth += delta;
@@ -598,7 +580,7 @@ function goToDate(dateStr) {
   switchPage('today');
 }
 
-// ===== 月度计划（不固定条数）=====
+// ===== 月度计划 =====
 function renderMonthPlan() {
   var ym = calYear + '-' + String(calMonth).padStart(2,'0');
   var mp = getMonthPlan(ym);
@@ -628,27 +610,12 @@ function renderMonthPlan() {
   });
 }
 
-  // 绑定blur保存
-  list.querySelectorAll('.mp-text').forEach(function(input) {
-    input.addEventListener('blur', function() {
-      var ym2 = this.getAttribute('data-ym');
-      var idx = parseInt(this.getAttribute('data-idx'));
-      var mp2 = getMonthPlan(ym2);
-      if (mp2[idx]) {
-        mp2[idx].text = this.value.trim();
-        saveMonthPlan(ym2, mp2);
-      }
-    });
-  });
-}
-
 function addMonthPlan() {
   var ym = calYear + '-' + String(calMonth).padStart(2,'0');
   var mp = getMonthPlan(ym);
-  mp.push({ id: 'mp_' + Date.now(), text: '' });
+  mp.push({ id: 'mp_' + Date.now(), text: '', done: false });
   saveMonthPlan(ym, mp);
   renderMonthPlan();
-  // 自动聚焦最后一个
   setTimeout(function() {
     var inputs = document.querySelectorAll('#monthPlanList .mp-text');
     if (inputs.length > 0) inputs[inputs.length - 1].focus();
@@ -670,7 +637,6 @@ function toggleMonthPlan(ym, idx) {
     renderMonthPlan();
   }
 }
-  
 // ===== 今日页渲染 =====
 function renderToday() {
   var data = ensureDayData(currentDate);
@@ -780,6 +746,7 @@ function updateProgress(data) {
     setTimeout(function() { celebrate(); }, 300);
   }
 }
+
 // ===== 任务操作 =====
 function toggleFixed(id) {
   var data = getDayData(currentDate);
@@ -836,7 +803,6 @@ function addFlexTask() {
   input.value = '';
   renderToday();
 }
-
 // ===== 固定事项管理 =====
 function renderRoutines() {
   var routines = getRoutines();
@@ -870,7 +836,6 @@ function addRoutine() {
   saveRoutines(routines);
   input.value = '';
 
-  // 立刻同步到今天
   var data = getDayData(todayStr());
   if (data) {
     data.fixed[newItem.id] = false;
@@ -970,13 +935,13 @@ function deleteIdea() {
   currentIdeaId = null;
   openSub('ideas');
 }
+
 // ===== 早睡打卡 =====
 function renderSleep() {
   var data = getSleepData();
   var today = todayStr();
   var todayChecked = data.dates.indexOf(today) !== -1;
 
-  // 计算连续天数
   var streak = 0;
   var checkDate = new Date();
   if (!todayChecked) {
@@ -1059,12 +1024,10 @@ function renderSleepCal(data) {
     grid.appendChild(cell);
   }
 }
-
 // ===== 猫咪桌宠 =====
 var catMeowing = false;
 
 function getCatState(data) {
-  // 检查是否全部完成
   var total = 0, done = 0;
   var fixedKeys = Object.keys(data.fixed);
   total += fixedKeys.length;
@@ -1077,7 +1040,6 @@ function getCatState(data) {
   }
   if (total > 0 && done === total) return 'complete';
 
-  // 根据时间
   var hour = new Date().getHours();
   if (hour >= 6 && hour < 12) return 'morning';
   if (hour >= 12 && hour < 18) return 'afternoon';
@@ -1110,25 +1072,22 @@ function updateCat(data) {
     case 'afternoon':
       container.classList.add('cat-sleep');
       bubble.textContent = '好困呀~';
-      // 眯眼
       if (eyeL) { eyeL.setAttribute('ry', '1'); }
       if (eyeR) { eyeR.setAttribute('ry', '1'); }
       break;
     case 'evening':
       container.classList.add('cat-type');
-      bubble.textContent = '撸起袖子加油干！';
+      bubble.textContent = '加油干！';
       break;
     case 'night':
       container.classList.add('cat-sleep');
       bubble.textContent = '该睡觉了~';
-      // 闭眼
       if (eyeL) { eyeL.setAttribute('ry', '0.8'); }
       if (eyeR) { eyeR.setAttribute('ry', '0.8'); }
       break;
     case 'complete':
       container.classList.add('cat-jump');
       bubble.textContent = '太棒了！🎉';
-      // 开心嘴
       if (mouth) mouth.setAttribute('d', 'M24 32Q28 37 32 32');
       break;
   }
@@ -1142,7 +1101,6 @@ function catMeow() {
 
   container.className = 'cat-container cat-meow';
   bubble.textContent = '喵~';
-  // 张嘴
   if (mouth) mouth.setAttribute('d', 'M25 32Q28 36 31 32');
 
   setTimeout(function() {
@@ -1170,16 +1128,12 @@ function celebrate() {
   if (lastCelebState[key] === stateKey) return;
   lastCelebState[key] = stateKey;
 
-  // 撒花
   launchConfetti();
 
-  // 猫咪跳跃
   var container = document.getElementById('catContainer');
   container.className = 'cat-container cat-jump';
-  document.getElementById('catBody').textContent = '😸';
   document.getElementById('catBubble').textContent = '太棒了！🎉';
 
-  // 文字
   var overlay = document.getElementById('celebOverlay');
   var text = document.getElementById('celebText');
   text.textContent = '🎉 全部完成！';
